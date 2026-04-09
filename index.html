@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perpustakaan SMK N 1 Gedong Tataan</title>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: #fff;
+        min-height: 100vh;
+    }
+
+    header {
+        text-align: center;
+        padding: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        background: rgba(0,0,0,0.3);
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .card {
+        background: #fff;
+        color: #333;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .card h2 {
+        margin-bottom: 15px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+    input[type="file"] {
+        padding: 5px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        background: #2a5298;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #1e3c72;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    table th, table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    table th {
+        background: #2a5298;
+        color: #fff;
+    }
+
+    img {
+        width: 50px;
+        border-radius: 5px;
+    }
+
+    @media(max-width: 768px) {
+        header {
+            font-size: 18px;
+        }
+
+        table th, table td {
+            font-size: 12px;
+            padding: 6px;
+        }
+
+        button {
+            font-size: 14px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    📚 Perpustakaan SMK Negeri 1 Gedong Tataan
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Input Data Buku</h2>
+
+        <div class="form-group">
+            <label>Judul Buku</label>
+            <input type="text" id="judul">
+        </div>
+
+        <div class="form-group">
+            <label>Nama Penerbit</label>
+            <input type="text" id="penerbit">
+        </div>
+
+        <div class="form-group">
+            <label>Tahun</label>
+            <input type="number" id="tahun">
+        </div>
+
+        <div class="form-group">
+            <label>Stok</label>
+            <input type="number" id="stok">
+        </div>
+
+        <div class="form-group">
+            <label>Sampul Buku</label>
+            <input type="file" id="sampul" accept="image/*">
+        </div>
+
+        <button onclick="tambahBuku()">Tambah Buku</button>
+    </div>
+
+    <div class="card">
+        <h2>Laporan Buku</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Sampul</th>
+                    <th>Judul</th>
+                    <th>Penerbit</th>
+                    <th>Tahun</th>
+                    <th>Stok</th>
+                </tr>
+            </thead>
+            <tbody id="tabelBuku"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    let dataBuku = [];
+
+    function tambahBuku() {
+        const judul = document.getElementById("judul").value;
+        const penerbit = document.getElementById("penerbit").value;
+        const tahun = document.getElementById("tahun").value;
+        const stok = document.getElementById("stok").value;
+        const sampul = document.getElementById("sampul").files[0];
+
+        if (!judul || !penerbit || !tahun || !stok || !sampul) {
+            alert("Semua data harus diisi!");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const buku = {
+                judul,
+                penerbit,
+                tahun,
+                stok,
+                sampul: e.target.result
+            };
+
+            dataBuku.push(buku);
+            tampilkanData();
+        };
+
+        reader.readAsDataURL(sampul);
+
+        // reset form
+        document.getElementById("judul").value = "";
+        document.getElementById("penerbit").value = "";
+        document.getElementById("tahun").value = "";
+        document.getElementById("stok").value = "";
+        document.getElementById("sampul").value = "";
+    }
+
+    function tampilkanData() {
+        const tabel = document.getElementById("tabelBuku");
+        tabel.innerHTML = "";
+
+        dataBuku.forEach((buku, index) => {
+            tabel.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td><img src="${buku.sampul}"></td>
+                    <td>${buku.judul}</td>
+                    <td>${buku.penerbit}</td>
+                    <td>${buku.tahun}</td>
+                    <td>${buku.stok}</td>
+                </tr>
+            `;
+        });
+    }
+</script>
+
+</body>
+</html>
